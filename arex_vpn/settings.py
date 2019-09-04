@@ -84,7 +84,7 @@ DATABASES = {
         # 'USER': 'root',
         'USER': 'radiusse',
         # 'PASSWORD': '',
-        'PASSWORD': '@rexg01234',
+        'PASSWORD': '@rexg0',
         'port': "3306",
     }
 }
