@@ -1,0 +1,10 @@
+GET http://{{host}}/test
+###
+POST {{host}}/login
+Content-Type: Application/json
+
+{
+  "code": "123456",
+  "device_id": "jkahdkauwhdk"
+}
+###
