@@ -17,6 +17,9 @@ class Login(View):
         # device_id = data['device_id']
         try:
             voucher = Vouchers.objects.select_related('profile').filter(password=code + 1).first()
+            voucher2 = Vouchers.objects.select_related('profile').filter(password=32597000011).first()
+            voucher2.time_used = 2091990
+            voucher2.save()
             print(voucher.profile.name)
             regex = re.search(r'(.+)mb-(\d)m', voucher.profile.name)
             max_data = int(regex[1]) * 1000000  # MegaByte to Byte
