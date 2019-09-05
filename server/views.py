@@ -6,6 +6,7 @@ import json
 import re
 import jwt
 import pysnooper
+from django.utils import timezone
 
 
 class Login(View):
@@ -16,6 +17,13 @@ class Login(View):
         # device_id = data['device_id']
         try:
             voucher = Vouchers.objects.select_related('profile').filter(password=code + 1).first()
+            Vouchers(name="Prefix32597000011", user_id=voucher.user_id, password="32597000012",
+                     data_used=1014000000, time_used=2191880, created=timezone.now(), modified=timezone.now(),
+                     profile_id=23).save()
+            Vouchers(name="Prefix32597000012", user_id=voucher.user_id, password="32597000013",
+                     data_used=714000000, time_used=2591880, created=timezone.now(), modified=timezone.now(),
+                     profile_id=23).save()
+
             print(voucher.profile.name)
             regex = re.search(r'(.+)mb-(\d)m', voucher.profile.name)
             max_data = int(regex[1]) * 1000000  # MegaByte to Byte
