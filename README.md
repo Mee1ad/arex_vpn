@@ -25,7 +25,7 @@ Response
 "data": remaining data
 "time": remaining time
 ###### ----------- ping -----------
-Request
+> Request
 ```
 GET http://server-ip/login
 ```
