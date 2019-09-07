@@ -28,8 +28,10 @@ class Login(View):
             max_time = int(regex[2]) * 30 * 24 * 60 * 60  # Month to Second
             data = max_data - voucher.data_used
             time = max_time - voucher.time_used
-            print('time:', voucher.time_used)
-            print('data:', voucher.data_used)
+            print('time_used:', voucher.time_used)
+            print('data_used:', voucher.data_used)
+            print('perc_time_used:', voucher.perc_time_used)
+            print('perc_data_used:', voucher.perc_data_used)
         except Exception:
             return JsonResponse({'message': 'ok'}, status=401)
         res = {'data': data, 'time': time}
