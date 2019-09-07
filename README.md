@@ -4,7 +4,7 @@
 ##### example:
 
 ###### ----------- login -----------
-******* Request *******
+Request
 ```
 POST http://server-ip/login
 Content-Type: Application/json
@@ -13,7 +13,7 @@ Content-Type: Application/json
   "code": "123456"
 }
 ```
-******* Response *******
+Response
 ```
 {
   "data": 324000000,
@@ -21,11 +21,11 @@ Content-Type: Application/json
 }
 ```
 ###### ----------- ping -----------
-******* Request *******
+Request
 ```
 GET http://server-ip/login
 ```
-******* Response *******
+Response
 ```
 {
   "message": "pong"
