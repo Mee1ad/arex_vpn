@@ -29,6 +29,7 @@ Response
 ```
 GET http://server-ip/login
 ```
+
 Response
 ```
 {
