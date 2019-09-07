@@ -1,7 +1,7 @@
 ## API server of arex (Django)
-#### api routes: login, ping
 
-##### example:
+##### api routes: login, ping
+
 
 ###### ----------- login -----------
 Request
@@ -13,6 +13,7 @@ Content-Type: Application/json
   "code": "123456"
 }
 ```
+"code": user password - 1
 Response
 ```
 {
@@ -20,6 +21,8 @@ Response
   "time": 1525137
 }
 ```
+"data": remaining data
+"time": remaining time
 ###### ----------- ping -----------
 Request
 ```
