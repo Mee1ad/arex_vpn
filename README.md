@@ -1,4 +1,16 @@
-# API server of arex (Django)
+## API server of arex (Django)
+### api routes: login, ping
 
-## api routs:
-### login
+### example:
+
+login
+```
+POST http://server-ip/login
+```
+```
+Content-Type: Application/json
+
+{
+  "code": "123456"
+}
+```
