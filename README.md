@@ -14,6 +14,7 @@ Content-Type: Application/json
 }
 ```
 "code": user password - 1
+
 Response
 ```
 {
