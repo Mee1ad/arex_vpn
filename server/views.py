@@ -20,7 +20,8 @@ class Login(View):
             voucher.profile.name = voucher.profile.name.lower()
             print(voucher.profile.name)
             regex = re.search(r'(\d+)mb-(\d+)m', voucher.profile.name)
-            max_data = int(regex[1]) * 1000000  # MegaByte to Byte
+            if regex:
+                max_data = int(regex[1]) * 1000000  # MegaByte to Byte
             if regex is None:
                 regex = re.search(r'(\d+)g-(\d+)m', voucher.profile.name)
                 max_data = int(regex[1]) * 1000000000  # GigaByte to Byte
