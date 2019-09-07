@@ -15,7 +15,7 @@ Content-Type: Application/json
 ```
 "code": user password - 1
 
-> Response
+Response
 ```
 {
   "data": 324000000,
@@ -25,7 +25,7 @@ Content-Type: Application/json
 "data": remaining data
 "time": remaining time
 ###### ----------- ping -----------
-> Request
+Request
 ```
 GET http://server-ip/login
 ```
