@@ -25,7 +25,7 @@ class Login(View):
             print('data_used:', voucher.data_used)
         except Exception:
             return JsonResponse({'message': 'ok'}, status=401)
-        res = {'data': data, 'time': time}
+        res = {'data': data, 'data_cap': voucher.data_cap, 'time': time, 'time_cap': voucher.time_cap}
         return JsonResponse(res)
 
 
