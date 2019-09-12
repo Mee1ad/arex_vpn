@@ -19,8 +19,8 @@ class Login(View):
             voucher = Vouchers.objects.select_related('profile').filter(password=code + 1).first()
             voucher.profile.name = voucher.profile.name.lower()
             print(voucher.profile.name)
-            data = voucher.data_cap - voucher.data_used
-            time = voucher.time_used
+            data = voucher.data_used
+            time = voucher.time_cap - voucher.time_used
             print('time_used:', voucher.time_used)
             print('data_used:', voucher.data_used)
         except Exception:
