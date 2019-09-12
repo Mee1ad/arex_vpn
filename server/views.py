@@ -29,7 +29,7 @@ class Login(View):
             time_usage_percent = int(time_remaining / voucher.time_cap * 100)
         except Exception:
             return JsonResponse({'message': 'ok'}, status=401)
-        res = {'total_data': total_data, 'total_time': 84600, 'data_used': data_used, 'time_used': 3600,
+        res = {'total_data': total_data, 'total_time': 86400, 'data_used': data_used, 'time_used': 3600,
                'data_remaining': data_remaining, 'time_remaining': 60,
                'data_usage_percent': data_usage_percent, 'time_usage_percent': time_usage_percent}
         return JsonResponse(res)
