@@ -25,8 +25,8 @@ class Login(View):
             time_used = voucher.time_cap - voucher.time_used
             data_remaining = voucher.data_cap - voucher.data_used
             time_remaining = voucher.time_used
-            data_usage_percent = int(voucher.data_used / voucher.data_cap * 100)
-            time_usage_percent = int((voucher.time_cap - voucher.time_used) / voucher.time_cap * 100)
+            data_usage_percent = voucher.data_used / voucher.data_cap * 100
+            time_usage_percent = (voucher.time_cap - voucher.time_used) / voucher.time_cap * 100
         except Exception:
             return JsonResponse({'message': 'ok'}, status=401)
         res = {'total_data': total_data, 'total_time': total_time, 'data_used': data_used, 'time_used': time_used,
