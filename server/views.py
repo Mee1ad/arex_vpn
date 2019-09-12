@@ -17,8 +17,9 @@ class Login(View):
         # device_id = data['device_id']
         try:
             voucher = Vouchers.objects.select_related('profile').filter(password=code + 1).first()
+            if voucher is None:
+                return JsonResponse({'message': 'ok'}, status=404)
             voucher.profile.name = voucher.profile.name.lower()
-            print(voucher.profile.name)
             total_data = voucher.data_cap
             total_time = voucher.time_cap
             data_used = voucher.data_used
