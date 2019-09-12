@@ -19,13 +19,19 @@ class Login(View):
             voucher = Vouchers.objects.select_related('profile').filter(password=code + 1).first()
             voucher.profile.name = voucher.profile.name.lower()
             print(voucher.profile.name)
-            data = voucher.data_used
-            time = voucher.time_cap - voucher.time_used
-            print('time_used:', voucher.time_used)
-            print('data_used:', voucher.data_used)
+            total_data = voucher.data_cap
+            total_time = voucher.time_cap
+            data_used = voucher.data_used
+            time_used = voucher.time_cap - voucher.time_used
+            data_remaining = voucher.data_cap - voucher.data_used
+            time_remaining = voucher.time_used
+            data_usage_percent = voucher.data_used / voucher.data_cap * 100
+            time_usage_percent = (voucher.time_cap - voucher.time_used) / voucher.time_cap * 100
         except Exception:
             return JsonResponse({'message': 'ok'}, status=401)
-        res = {'data': data, 'data_cap': voucher.data_cap, 'time': time, 'time_cap': voucher.time_cap}
+        res = {'total_data': total_data, 'total_time': total_time, 'data_used': data_used, 'time_used': time_used,
+               'data_remaining': data_remaining, 'time_remaining': time_remaining,
+               'data_usage_percent': data_usage_percent, 'time_usage_percent': time_usage_percent}
         return JsonResponse(res)
 
 
