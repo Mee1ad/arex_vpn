@@ -1,3 +1,95 @@
 from django.contrib import admin
-
+from server.models import *
+from django.urls import reverse
+from django.utils.safestring import mark_safe
+from django.utils.html import escape
+from server import generate_voucher
 # Register your models here.
+
+
+class VoucherAdmin(admin.ModelAdmin):
+    list_display = ('name', 'status', 'link_to_user', 'perc_time_used', 'perc_data_used', 'realm')
+    list_filter = ('status', 'user', 'realm')
+    list_display_links = ('name',)
+    search_fields = ['name']
+    list_per_page = 10
+    ordering = ('-created',)
+
+    @staticmethod
+    def link_to_user(obj):
+        if obj.user:
+            link = reverse("admin:users_change", args=[obj.user.id])
+            return mark_safe(f'<a href="{link}">{escape(obj.user.__str__())}</a>')
+        return None
+
+    link_to_user.admin_order_field = 'User'
+
+
+class RadcheckAdmin(admin.ModelAdmin):
+    list_display = ('username', 'attribute', 'op', 'value')
+    search_fields = ['username']
+    list_per_page = 10
+    ordering = ('-id',)
+
+
+class RealmAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'link_to_user', 'city')
+    list_filter = ('name', 'email', 'city', 'user')
+    search_fields = ['name', 'email', 'city']
+    list_per_page = 10
+    ordering = ('-created',)
+
+    def link_to_user(self, obj):
+        VoucherAdmin.link_to_user(obj)
+
+    link_to_user.admin_order_field = 'User'
+
+
+class UserGeneratorAdmin(admin.ModelAdmin):
+    list_display = ('edit', 'count', 'realm', 'profile', 'status')
+    search_fields = ['count', 'realm', 'profile', 'status']
+    actions = ["generate_queries"]
+
+    def generate_queries(self, request, queryset):
+        for item in queryset:
+            generate_voucher.run(item.profile, item.profile_id, item.realm, item.realm_id,
+                                 item, item.count)
+
+    def edit(self, obj):
+        link = reverse("admin:server_usergenerator_change", args=[obj.id])
+        return mark_safe(f'<a href="{link}">EDIT</a>')
+
+    generate_queries.short_description = 'Generate selected queries'
+
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = ('name', 'available_to_siblings', 'link_to_user',)
+    list_filter = ('name', 'user')
+    search_fields = ['name', 'user']
+    list_per_page = 10
+    ordering = ('-created',)
+
+    def link_to_user(self, obj):
+        VoucherAdmin.link_to_user(obj)
+
+    link_to_user.admin_order_field = 'User'
+
+
+class ProfileComponentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'available_to_siblings', 'link_to_user')
+    list_filter = ('name', 'user')
+    search_fields = ['name', 'email', 'city']
+    list_per_page = 10
+    ordering = ('-created',)
+
+    def link_to_user(self, obj):
+        VoucherAdmin.link_to_user(obj)
+
+    link_to_user.admin_order_field = 'User'
+
+admin.site.register(Voucher, VoucherAdmin)
+admin.site.register(Realm, RealmAdmin)
+admin.site.register(UserGenerator, UserGeneratorAdmin)
+admin.site.register(Radcheck, RadcheckAdmin)
+admin.site.register(Profile, ProfileAdmin)
+admin.site.register(ProfileComponents, ProfileComponentAdmin)

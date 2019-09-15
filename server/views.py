@@ -7,6 +7,10 @@ import re
 import jwt
 import pysnooper
 from django.utils import timezone
+import random
+from django.db import IntegrityError
+import os
+from time import time
 
 
 class Login(View):
@@ -15,10 +19,9 @@ class Login(View):
         data = json.loads(request.body)
         code = int(data['code'])
         # device_id = data['device_id']
-        voucher = Vouchers.objects.select_related('profile').filter(password=code + 1).first()
+        voucher = Voucher.objects.select_related('profile').filter(password=code + 1).first()
         if voucher is None:
             return JsonResponse({'message': 'ok'}, status=404)
-        voucher.profile.name = voucher.profile.name.lower()
         total_data = voucher.data_cap
         total_time = voucher.time_cap
         data_used = voucher.data_used
@@ -35,4 +38,13 @@ class Login(View):
 
 class Ping(View):
     def get(self, request):
+        ip = request.META.get('REMOTE_ADDR')
+        print(ip)
+        # servers = ['8.8.8.8', '4.2.2.4', 'google.com', 'yahoo.com']
+        # server_ping = {}
+        # for server in servers:
+        #     start = time()
+        #     ping = os.system(f'ping -n 1 {server}')
+        #     latency = time() - start
+        #     server_ping[server]
         return JsonResponse({'message': 'pong'})
