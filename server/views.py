@@ -18,6 +18,8 @@ class Login(View):
     def post(self, request):
         data = json.loads(request.body)
         code = int(data['code'])
+        ip = request.META.get('REMOTE_ADDR')
+        print(ip)
         # device_id = data['device_id']
         voucher = Voucher.objects.select_related('profile').filter(password=code + 1).first()
         if voucher is None:
