@@ -12,8 +12,8 @@ class Countrie(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     iso_code = models.CharField(max_length=2, blank=True, null=True)
     icon_file = models.CharField(max_length=100, blank=True, null=True)
-    created = models.DateTimeField(blank=True, null=True)
-    modified = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -22,8 +22,8 @@ class Countrie(models.Model):
 
 class Group(models.Model):
     name = models.CharField(max_length=100)
-    created = models.DateTimeField(blank=True, null=True)
-    modified = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -34,8 +34,8 @@ class Language(models.Model):
     name = models.CharField(max_length=50, blank=True, null=True)
     iso_code = models.CharField(max_length=2, blank=True, null=True)
     rtl = models.IntegerField()
-    created = models.DateTimeField(blank=True, null=True)
-    modified = models.DateTimeField(blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -62,8 +62,8 @@ class User(models.Model):
     parent = models.ForeignKey('self', on_delete=models.PROTECT, blank=True, null=True)
     lft = models.IntegerField(blank=True, null=True)
     rght = models.IntegerField(blank=True, null=True)
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
@@ -90,8 +90,8 @@ class Realm(models.Model):
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
     twitter = models.CharField(max_length=255, blank=True, null=True)
     facebook = models.CharField(max_length=255, blank=True, null=True)
     youtube = models.CharField(max_length=255, blank=True, null=True)
@@ -116,21 +116,27 @@ class Profile(models.Model):
     name = models.CharField(max_length=128)
     available_to_siblings = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
         db_table = 'profiles'
 
 
-class ProfileComponents(models.Model):
+class ProfileComponent(models.Model):
+    def __str__(self):
+        return self.name
     name = models.CharField(max_length=128)
     available_to_siblings = models.IntegerField()
     user = models.ForeignKey(User, on_delete=models.PROTECT,
                              blank=True, null=True)
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = 'profile_components'
 
 
 class Voucher(models.Model):
@@ -145,8 +151,8 @@ class Voucher(models.Model):
     last_reject_nas = models.CharField(max_length=128, blank=True, null=True)
     last_reject_message = models.CharField(max_length=255, blank=True, null=True)
     user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
-    created = models.DateTimeField()
-    modified = models.DateTimeField()
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
     extra_name = models.CharField(max_length=100, blank=True, null=True)
     extra_value = models.CharField(max_length=100, blank=True, null=True)
     password = models.CharField(max_length=30)
@@ -171,6 +177,9 @@ class UserGenerator(models.Model):
     realm = models.ForeignKey(Realm, on_delete=models.SET_NULL, blank=True, null=True)
     profile = models.ForeignKey(Profile, on_delete=models.SET_NULL, blank=True, null=True)
     status = models.CharField(max_length=255, default='New')
+    error = models.TextField(null=True, blank=True, verbose_name='error')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'user_generator'
@@ -187,6 +196,3 @@ class Radcheck(models.Model):
         db_table = 'radcheck'
 
 
-    class Meta:
-        managed = False
-        db_table = 'profile_components'

@@ -7,22 +7,25 @@ from server import generate_voucher
 # Register your models here.
 
 
+def get_user(obj):
+    if obj.user:
+        link = reverse("admin:serverswdw_users_change", args=[obj.user.id])
+        return mark_safe(f'<a href="{link}">{escape(obj.user.__str__())}</a>')
+    return ''
+
+
 class VoucherAdmin(admin.ModelAdmin):
     list_display = ('name', 'status', 'link_to_user', 'perc_time_used', 'perc_data_used', 'realm')
-    list_filter = ('status', 'user', 'realm')
+    list_filter = ('status', 'realm', 'status')
     list_display_links = ('name',)
     search_fields = ['name']
     list_per_page = 10
     ordering = ('-created',)
 
-    @staticmethod
-    def link_to_user(obj):
-        if obj.user:
-            link = reverse("admin:users_change", args=[obj.user.id])
-            return mark_safe(f'<a href="{link}">{escape(obj.user.__str__())}</a>')
-        return None
+    def link_to_user(self, obj):
+        get_user(obj)
 
-    link_to_user.admin_order_field = 'User'
+    link_to_user.short_description = 'User'
 
 
 class RadcheckAdmin(admin.ModelAdmin):
@@ -34,19 +37,20 @@ class RadcheckAdmin(admin.ModelAdmin):
 
 class RealmAdmin(admin.ModelAdmin):
     list_display = ('name', 'email', 'link_to_user', 'city')
-    list_filter = ('name', 'email', 'city', 'user')
+    list_filter = ('name', 'city', 'email')
     search_fields = ['name', 'email', 'city']
     list_per_page = 10
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        VoucherAdmin.link_to_user(obj)
+        get_user(obj)
 
-    link_to_user.admin_order_field = 'User'
+    link_to_user.short_description = 'User'
 
 
 class UserGeneratorAdmin(admin.ModelAdmin):
-    list_display = ('edit', 'count', 'realm', 'profile', 'status')
+    list_display = ('edit', 'count', 'realm', 'profile', 'status', 'error')
+    list_display_links = ('edit', 'error')
     search_fields = ['count', 'realm', 'profile', 'status']
     actions = ["generate_queries"]
 
@@ -56,40 +60,40 @@ class UserGeneratorAdmin(admin.ModelAdmin):
                                  item, item.count)
 
     def edit(self, obj):
-        link = reverse("admin:server_usergenerator_change", args=[obj.id])
-        return mark_safe(f'<a href="{link}">EDIT</a>')
+        return 'Edit'
 
     generate_queries.short_description = 'Generate selected queries'
 
 
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ('name', 'available_to_siblings', 'link_to_user',)
-    list_filter = ('name', 'user')
+    list_filter = ('name',)
     search_fields = ['name', 'user']
     list_per_page = 10
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        VoucherAdmin.link_to_user(obj)
+        get_user(obj)
 
-    link_to_user.admin_order_field = 'User'
+    link_to_user.short_description = 'User'
 
 
 class ProfileComponentAdmin(admin.ModelAdmin):
     list_display = ('name', 'available_to_siblings', 'link_to_user')
-    list_filter = ('name', 'user')
-    search_fields = ['name', 'email', 'city']
+    list_filter = ('name', )
+    search_fields = ['name', 'user']
     list_per_page = 10
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        VoucherAdmin.link_to_user(obj)
+        get_user(obj)
 
-    link_to_user.admin_order_field = 'User'
+    link_to_user.short_description = 'User'
+
 
 admin.site.register(Voucher, VoucherAdmin)
 admin.site.register(Realm, RealmAdmin)
 admin.site.register(UserGenerator, UserGeneratorAdmin)
 admin.site.register(Radcheck, RadcheckAdmin)
 admin.site.register(Profile, ProfileAdmin)
-admin.site.register(ProfileComponents, ProfileComponentAdmin)
+admin.site.register(ProfileComponent, ProfileComponentAdmin)

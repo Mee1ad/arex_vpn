@@ -23,11 +23,20 @@ def add_radchack(rnd, profile, reseller):
 def run(profile, profile_id, reseller, reseller_id, item, count):
     item.status = 'Running'
     item.save()
-    for i in range(count):
-        try:
-            rnd = random.randint(1000000000, 9999999999)
-            add_voucher(rnd, profile, profile_id, reseller, reseller_id)
-        except IntegrityError:
-            run(profile, profile_id, reseller, reseller_id)
-    item.status = 'Done'
-    item.save()
+    user_count = 0
+    try:
+        for i in range(count):
+            try:
+                rnd = random.randint(1000000000, 9999999999)
+                add_voucher(rnd, profile, profile_id, reseller, reseller_id)
+                user_count += 1
+            except IntegrityError:
+                count = count - user_count
+                run(profile, profile_id, reseller, reseller_id, item, count)
+        item.status = 'Done'
+        item.error = None
+        item.save()
+    except Exception as e:
+        item.status = f'Error after {user_count} user generated'
+        item.error = e
+        item.save()
