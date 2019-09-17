@@ -40,8 +40,6 @@ class Login(View):
 
 class Ping(View):
     def get(self, request):
-        ip = request.META.get('REMOTE_ADDR')
-        print(ip)
         servers = ['us1.arexgo.com', 'us2.arexgo.com', 'us3.arexgo.com', 'us4.arexgo.com', 'us5.arexgo.com',
                    'us6.arexgo.com']
         server_ping = {}
@@ -50,4 +48,6 @@ class Ping(View):
             os.system(f'ping -n 1 {server}')
             latency = time() - start
             server_ping[server] = latency
-        return JsonResponse({'message': min(server_ping)})
+        pings = sorted(server_ping, key=server_ping.get)
+        res = {'pings': [pings[0], pings[1]]}
+        return JsonResponse(res)
