@@ -29,9 +29,9 @@ class VoucherAdmin(admin.ModelAdmin):
     link_to_user.short_description = 'User'
 
 
-class RadcheckAdmin(admin.ModelAdmin):
-    list_display = ('username', 'attribute', 'op', 'value')
-    search_fields = ['username']
+class RadgroupcheckAdmin(admin.ModelAdmin):
+    list_display = ('groupname', 'attribute', 'op', 'value', 'comment')
+    search_fields = ['groupname']
     list_per_page = 10
     ordering = ('-id',)
 
@@ -95,6 +95,6 @@ class ProfileComponentAdmin(admin.ModelAdmin):
 admin.site.register(Voucher, VoucherAdmin)
 admin.site.register(Realm, RealmAdmin)
 admin.site.register(UserGenerator, UserGeneratorAdmin)
-admin.site.register(Radcheck, RadcheckAdmin)
+admin.site.register(Radgroupcheck, RadgroupcheckAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(ProfileComponent, ProfileComponentAdmin)

@@ -185,14 +185,17 @@ class UserGenerator(models.Model):
         db_table = 'user_generator'
 
 
-class Radcheck(models.Model):
-    username = models.CharField(max_length=64)
+class Radgroupcheck(models.Model):
+    groupname = models.CharField(max_length=64)
     attribute = models.CharField(max_length=64)
     op = models.CharField(max_length=2)
     value = models.CharField(max_length=253)
+    comment = models.CharField(max_length=253, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
 
     class Meta:
         managed = False
-        db_table = 'radcheck'
+        db_table = 'radgroupcheck'
 
 
