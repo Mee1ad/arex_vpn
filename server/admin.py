@@ -9,7 +9,7 @@ from server import generate_voucher
 
 def get_user(obj):
     if obj.user:
-        link = reverse("admin:serverswdw_users_change", args=[obj.user.id])
+        link = reverse("admin:server_users_change", args=[obj.user.id])
         return mark_safe(f'<a href="{link}">{escape(obj.user.__str__())}</a>')
     return ''
 
