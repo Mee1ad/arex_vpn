@@ -9,8 +9,9 @@ from server import generate_voucher
 
 def get_user(obj):
     if obj.user:
-        link = reverse("admin:users_change", args=[obj.user.id])
-        return mark_safe(f'<a href="{link}">{escape(obj.user.__str__())}</a>')
+        print(obj.user)
+        link = reverse("admin:auth_user_change", args=[obj.user.id])
+        return mark_safe(f'<a href="{link}">{escape(obj.user)}</a>')
     return ''
 
 
@@ -23,7 +24,7 @@ class VoucherAdmin(admin.ModelAdmin):
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        get_user(obj)
+        return get_user(obj)
 
     link_to_user.short_description = 'User'
 
@@ -43,7 +44,7 @@ class RealmAdmin(admin.ModelAdmin):
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        get_user(obj)
+        return get_user(obj)
 
     link_to_user.short_description = 'User'
 
@@ -73,7 +74,7 @@ class ProfileAdmin(admin.ModelAdmin):
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        get_user(obj)
+        return get_user(obj)
 
     link_to_user.short_description = 'User'
 
@@ -86,7 +87,7 @@ class ProfileComponentAdmin(admin.ModelAdmin):
     ordering = ('-created',)
 
     def link_to_user(self, obj):
-        get_user(obj)
+        return get_user(obj)
 
     link_to_user.short_description = 'User'
 
