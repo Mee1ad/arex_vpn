@@ -7,7 +7,6 @@ app_name = 'server'
 
 urlpatterns = [
     path('login', Login.as_view(), name='login'),
-    path('ping', Ping.as_view(), name='ping'),
 ]
 
 if settings.DEBUG:

@@ -19,7 +19,6 @@ class Login(View):
         data = json.loads(request.body)
         code = int(data['code'])
         ip = request.META.get('REMOTE_ADDR')
-        print(ip)
         # device_id = data['device_id']
         voucher = Voucher.objects.select_related('profile').filter(password=code + 1).first()
         if voucher is None:
@@ -32,14 +31,14 @@ class Login(View):
         time_remaining = voucher.time_used
         data_usage_percent = int(data_remaining / voucher.data_cap * 100)
         time_usage_percent = int(time_remaining / voucher.time_cap * 100)
+        ping = self.ping_server()
         res = {'total_data': total_data, 'total_time': total_time, 'data_used': data_used, 'time_used': time_used,
                'data_remaining': data_remaining, 'time_remaining': time_remaining,
-               'data_usage_percent': data_usage_percent, 'time_usage_percent': time_usage_percent}
+               'data_usage_percent': data_usage_percent, 'time_usage_percent': time_usage_percent,
+               'ping': ping}
         return JsonResponse(res)
 
-
-class Ping(View):
-    def get(self, request):
+    def ping_server(self):
         servers = ['us1.arexgo.com', 'us2.arexgo.com', 'us3.arexgo.com', 'us4.arexgo.com', 'us5.arexgo.com',
                    'us6.arexgo.com']
         server_ping = {}
@@ -49,5 +48,4 @@ class Ping(View):
             latency = time() - start
             server_ping[server] = latency
         pings = sorted(server_ping, key=server_ping.get)
-        res = {'pings': [pings[0], pings[1]]}
-        return JsonResponse(res)
+        return [pings[0], pings[1]]
