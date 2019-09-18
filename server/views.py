@@ -35,7 +35,7 @@ class Login(View):
         res = {'total_data': total_data, 'total_time': total_time, 'data_used': data_used, 'time_used': time_used,
                'data_remaining': data_remaining, 'time_remaining': time_remaining,
                'data_usage_percent': data_usage_percent, 'time_usage_percent': time_usage_percent,
-               'ping': ping}
+               's': ping}
         return JsonResponse(res)
 
     def ping_server(self):
