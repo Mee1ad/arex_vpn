@@ -13,11 +13,11 @@ def add_voucher(rnd, profile, profile_id, reseller, reseller_id):
 
 
 def add_radchack(rnd, profile, reseller):
-    Radgroupcheck(username=f'Arex{rnd}', attribute='User-Profile', op=':=', value=profile).save()
-    Radgroupcheck(username=f'Arex{rnd}', attribute='Rd-Realm', op=':=', value=reseller).save()
-    Radgroupcheck(username=f'Arex{rnd}', attribute='Cleartext-Password', op=':=', value=rnd + 1).save()
-    Radgroupcheck(username=f'Arex{rnd}', attribute='Rd-Voucher', op=':=', value='30-00-00-00').save()
-    Radgroupcheck(username=f'Arex{rnd}', attribute='Rd-User-Type', op=':=', value='voucher').save()
+    Radcheck(username=f'Arex{rnd}', attribute='User-Profile', op=':=', value=profile).save()
+    Radcheck(username=f'Arex{rnd}', attribute='Rd-Realm', op=':=', value=reseller).save()
+    Radcheck(username=f'Arex{rnd}', attribute='Cleartext-Password', op=':=', value=rnd + 1).save()
+    Radcheck(username=f'Arex{rnd}', attribute='Rd-Voucher', op=':=', value='30-00-00-00').save()
+    Radcheck(username=f'Arex{rnd}', attribute='Rd-User-Type', op=':=', value='voucher').save()
 
 
 def run(profile, profile_id, reseller, reseller_id, item, count):
