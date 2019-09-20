@@ -200,7 +200,7 @@ class Radcheck(models.Model):
 
 class ApiUser(models.Model):
     pin = models.CharField(max_length=31)
-    device_id = models.CharField(max_length=127)
+    device_id = models.CharField(max_length=127, unique=True)
     device = models.CharField(max_length=127)
     os = models.CharField(max_length=127)
     ip = models.CharField(max_length=31)

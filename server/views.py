@@ -53,6 +53,9 @@ class Login(View):
 class Signup(View):
     def post(self, request):
         data = json.loads(request.body)
-        ApiUser(pin=data['pin'], device_id=data['device-id'], device=data['device'], os=data['os'], ip=data['ip'],
-                mac=data['mac']).save()
-        return JsonResponse({'message': 'ok'})
+        try:
+            ApiUser(pin=data['pin'], device_id=data['device-id'], device=data['device'], os=data['os'], ip=data['ip'],
+                    mac=data['mac']).save()
+            return JsonResponse({'message': 'ok'})
+        except IntegrityError:
+            return JsonResponse({'message': 'already signed up'})
