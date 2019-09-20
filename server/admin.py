@@ -92,9 +92,26 @@ class ProfileComponentAdmin(admin.ModelAdmin):
     link_to_user.short_description = 'User'
 
 
+class ApiUserAdmin(admin.ModelAdmin):
+    list_display = ('device', 'os', 'ip')
+    list_filter = ('os',)
+    search_fields = ['ip', 'os', 'device', 'mac']
+    list_per_page = 10
+    ordering = ('-id',)
+
+
+class ApiHitAdmin(admin.ModelAdmin):
+    list_display = ('url',)
+    search_fields = ['url']
+    list_per_page = 10
+    ordering = ('-id',)
+
+
 admin.site.register(Voucher, VoucherAdmin)
 admin.site.register(Realm, RealmAdmin)
 admin.site.register(UserGenerator, UserGeneratorAdmin)
 admin.site.register(Radcheck, RadcheckAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(ProfileComponent, ProfileComponentAdmin)
+admin.site.register(ApiUser, ApiUserAdmin)
+admin.site.register(ApiHit, ApiHitAdmin)

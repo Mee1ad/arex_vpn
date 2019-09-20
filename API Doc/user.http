@@ -1,10 +1,26 @@
-GET http://{{host}}/test
+GET http://{{host}}/ping
+###
+GET http://108.170.49.67:8090/ping
+###
+GET http://108.170.49.67:8090/wsgi_test
 ###
 POST {{host}}/login
 Content-Type: Application/json
 
 {
-  "code": "3259700001",
-  "device_id": "jkahdkauwhdk"
+  "code": "9023928612"
 }
+###
+POST {{host}}/signup
+Content-Type: Application/json
+
+ {
+   "pin":"arex25353140",
+   "device-id":"as4drcew5rvt1r",
+   "device":"samsung g570-a",
+   "os":"lollipop",
+   "ip":"192.168.43.25",
+   "mac":"MA:C5:S4:SD:J4:57"
+ }
+
 ###

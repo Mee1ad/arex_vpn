@@ -198,3 +198,19 @@ class Radcheck(models.Model):
         db_table = 'radcheck'
 
 
+class ApiUser(models.Model):
+    pin = models.CharField(max_length=31)
+    device_id = models.CharField(max_length=127)
+    device = models.CharField(max_length=127)
+    os = models.CharField(max_length=127)
+    ip = models.CharField(max_length=31)
+    mac = models.CharField(max_length=127)
+
+    class Meta:
+        db_table = 'api_user'
+
+class ApiHit(models.Model):
+    url = models.URLField()
+
+    class Meta:
+        db_table = 'api_hit_address'

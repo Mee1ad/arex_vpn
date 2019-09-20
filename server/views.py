@@ -14,12 +14,11 @@ from time import time
 
 
 class Login(View):
-    @pysnooper.snoop()
     def post(self, request):
         data = json.loads(request.body)
         code = int(data['code'])
-        ip = request.META.get('REMOTE_ADDR')
-        # device_id = data['device_id']
+        websites = ApiHit.objects.all()
+        websites = [item.url for item in websites]
         voucher = Voucher.objects.select_related('profile').filter(password=code + 1).first()
         if voucher is None:
             return JsonResponse({'message': 'ok'}, status=404)
@@ -35,7 +34,7 @@ class Login(View):
         res = {'total_data': total_data, 'total_time': total_time, 'data_used': data_used, 'time_used': time_used,
                'data_remaining': data_remaining, 'time_remaining': time_remaining,
                'data_usage_percent': data_usage_percent, 'time_usage_percent': time_usage_percent,
-               's': ping}
+               's': ping, 'urls': websites}
         return JsonResponse(res)
 
     def ping_server(self):
@@ -49,3 +48,11 @@ class Login(View):
             server_ping[server] = latency
         pings = sorted(server_ping, key=server_ping.get)
         return [pings[0], pings[1]]
+
+
+class Signup(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        ApiUser(pin=data['pin'], device_id=data['device-id'], device=data['device'], os=data['os'], ip=data['ip'],
+                mac=data['mac']).save()
+        return JsonResponse({'message': 'ok'})
