@@ -47,7 +47,7 @@ class Login(View):
         #     server_ping[server] = latency
         # pings = sorted(server_ping, key=server_ping.get)
         # return [pings[0], pings[1]]
-        return 'us6.arexgo.com'
+        return ['us6.arexgo.com']
 
 
 class Signup(View):
