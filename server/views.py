@@ -40,13 +40,14 @@ class Login(View):
         servers = ['us1.arexgo.com', 'us2.arexgo.com', 'us3.arexgo.com', 'us4.arexgo.com', 'us5.arexgo.com',
                    'us6.arexgo.com']
         server_ping = {}
-        for server in servers:
-            start = time()
-            os.system(f'ping -n 1 {server}')
-            latency = time() - start
-            server_ping[server] = latency
-        pings = sorted(server_ping, key=server_ping.get)
-        return [pings[0], pings[1]]
+        # for server in servers:
+        #     start = time()
+        #     os.system(f'ping -n 1 {server}')
+        #     latency = time() - start
+        #     server_ping[server] = latency
+        # pings = sorted(server_ping, key=server_ping.get)
+        # return [pings[0], pings[1]]
+        return 'us6.arexgo.com'
 
 
 class Signup(View):
