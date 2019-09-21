@@ -1,0 +1,170 @@
+<head>
+<title>New User</title>
+<link rel="stylesheet" type="text/css" href="/static/admin/css/base.css">
+<link rel="stylesheet" type="text/css" href="/static/admin/css/forms.css">
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/jquery/jquery.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.js"></script>
+<script type="text/javascript" src="/static/admin/js/urlify.js"></script>
+<script type="text/javascript" src="/static/admin/js/prepopulate.js"></script>
+<script type="text/javascript" src="/static/admin/js/vendor/xregexp/xregexp.js"></script>
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
+<meta name="robots" content="NONE,NOARCHIVE">
+<style>
+    .r_margin{
+        margin-right: 2rem;
+    }
+    .r2_margin{
+        margin-right: 8.8rem;
+    }
+</style>
+</head>
+<body>
+<div class="colM" id="content">
+    <div id="content-main">
+        <form action="/send_form" method="POST">
+            {% csrf_token %}
+            {{ form }}
+            <h1>Profile Component</h1>
+            {% with 'pct_ pcd_' as list %}
+                {% for pref in list.split %}
+                    <fieldset class="module aligned ">
+                        {% if pref == 'pct_' %}
+                            <h2>Time</h2>
+                        {% else %}
+                            <h2>Data</h2>
+                        {% endif %}
+                        <div class="form-row field-name">
+                            <div>
+                                <label class="required" for="name">name:</label>
+                                    <input name="{{pref}}name" class="vTextField" placeholder="{% if pref == 'pct_' %}3Months{% else %}3G{% endif %}" required="" type="text" maxlength="150">
+                            </div>
+                        </div>
+                        <div class="form-row field-available-to-siblings">
+                            <div class="checkbox-row">
+                                <label class="required" for="available-to-siblings">available_to_siblings</label>
+                                <select name="{{pref}}available_to_siblings">
+                                    <option value="0">0</option>
+                                    <option value="1" selected>1</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row field-user">
+                            <label class="required" for="user">user:</label>
+                                <select name="{{pref}}user">
+                                    <option value="">---------</option>
+                                    {% for i in users %}
+                                        <option value={{i.pk}}>{{i}}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                    </fieldset>
+                {% endfor %}
+            {% endwith %}
+            <h1>Profile</h1>
+            <fieldset class="module aligned ">
+                <h2>Name</h2>
+                <div class="form-row field-name">
+                    <div>
+                        <label class="required" for="name">name:</label>
+                            <input name="p_name" class="vTextField" placeholder="3M-3G" id="name" required="" type="text" maxlength="150">
+                    </div>
+                </div>
+                <div class="form-row field-available-to-siblings">
+                    <div class="checkbox-row">
+                        <label class="required" for="available-to-siblings">available_to_siblings</label>
+                        <select name="{{pref}}available_to_siblings">
+                            <option value="0">0</option>
+                            <option value="1" selected>1</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row field-user">
+                    <label class="required" for="user">user:</label>
+                        <select name="p_user">
+                            <option value="">---------</option>
+                            {% for i in users %}
+                                <option value={{i.pk}}>{{i}}</option>
+                            {% endfor %}
+                        </select>
+                </div>
+            </fieldset>
+            <h1>Radgroupcheck</h1>
+            {% with 'd_ t_' as list %}
+                {% for pref in list.split %}
+                    <fieldset class="module aligned ">
+                        {% if pref == 'd_' %}
+                            <h2>Data Parameters</h2>
+                        {% else %}
+                            <h2>Time Parameters</h2>
+                        {% endif %}
+                        {% with 'groupname attribute op value comment' as list %}
+                            {% for item in list.split %}
+                                {% if item != 'attribute' %}
+                                <div class="form-row field-{{item}}">
+                                    <div>
+                                        <label class="required" for={{item}}>{{item}}:</label>
+                                        {% for i in '123'|make_list %}
+                                            <input name="{{pref}}{{item}}{{ i }}" class="vTextField r_margin" required="" type="text" maxlength="150" placeholder="{% if item == 'groupname' %}{% if pref == 'd_' %}3G{% else %}3Months{% endif %}{% elif item == 'op' %}:={% elif item == 'value' %}hard{% endif %}">
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% else %}
+                                    <div class="form-row field-{{item}}">
+                                    <div>
+                                        <label class="required" for={{item}}>{{item}}:</label>
+                                        {% for i in '123'|make_list %}
+                                            <select name="{{pref}}{{item}}{{ i }}" class="r2_margin" required>
+                                                {% if pref == 'd_' %}
+                                                    <option value="Rd-Cap-Type-Data">Rd-Cap-Type-Data</option>
+                                                    <option value="Rd-Reset-Type-Data">Rd-Reset-Type-Data</option>
+                                                    <option value="Rd-Total-Data">Rd-Total-Data</option>
+                                                {% else %}
+                                                    <option value="Rd-Total-Time">Rd-Total-Time</option>
+                                                    <option value="Rd-Cap-Type-Time">Rd-Cap-Type-Time</option>
+                                                    <option value="Rd-Reset-Type-Time">Rd-Reset-Type-Time</option>
+                                                {% endif %}
+                                            </select>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% endwith %}
+                    </fieldset>
+                {% endfor %}
+            {% endwith %}
+            <h1>Radusergroup</h1>
+            <fieldset class="module aligned ">
+                <h2>Profile parameters</h2>
+                <div class="form-row field-username">
+                    <div>
+                        <label class="required" for="username">username:</label>
+                            <input name="rdg_username" placeholder="3M-3G" class="vTextField r_margin" id="username" type="text" maxlength="150">
+                            <input name="rdg_username2" placeholder="3M-3G" class="vTextField" id="name" type="text" maxlength="150">
+                    </div>
+                </div>
+                <div class="form-row field-groupname">
+                    <div>
+                        <label class="required" for="groupname">groupname:</label>
+                            <input name="rdg_groupname" placeholder="3G" class="vTextField r_margin" id="name" required="" type="text" maxlength="150">
+                            <input name="rdg_groupname2" placeholder="3Months" class="vTextField" id="name" required="" type="text" maxlength="150">
+                    </div>
+                </div>
+                <div class="form-row field-priority">
+                    <div>
+                        <label class="required" for="priority">priority:</label>
+                            <input name="rdg_priority" class="vTextField r_margin" required="" type="number" maxlength="150">
+                            <input name="rdg_priority2" class="vTextField"  required="" type="number" maxlength="150">
+                    </div>
+                </div>
+            </fieldset>
+            <input type="submit" value="OK">
+        </form>
+    </div>
+</div>
+</body>

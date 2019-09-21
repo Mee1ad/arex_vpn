@@ -3,14 +3,13 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 from server.models import *
 import json
-import re
-import jwt
 import pysnooper
-from django.utils import timezone
-import random
 from django.db import IntegrityError
 import os
 from time import time
+from django.http import HttpResponseRedirect
+from .form import ProfileForm
+from django.template import loader
 
 
 class Login(View):
@@ -59,3 +58,28 @@ class Signup(View):
             return JsonResponse({'message': 'ok'})
         except IntegrityError:
             return JsonResponse({'message': 'already signed up'})
+
+
+class FormView(View):
+    def get(self, request):
+        template = loader.get_template('form.html')
+
+        context = {
+            'users': User.objects.all()[:3],
+        }
+        return HttpResponse(template.render(context, request))
+
+
+class Form(View):
+    def post(self, request):
+        print(request.POST)
+        form = ProfileForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            return HttpResponseRedirect('/form')
+        print('invalid form')
+        return HttpResponseRedirect('/form')
+
+    def get(self, request):
+        form = ProfileForm()
+        return render(request, 'form.html', {'form': form})
