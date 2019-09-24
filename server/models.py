@@ -134,6 +134,8 @@ class ProfileComponent(models.Model):
 
 
 class Voucher(models.Model):
+    def __str__(self):
+        return self.name
     name = models.CharField(unique=True, max_length=64, blank=True, null=True)
     batch = models.CharField(max_length=128, blank=True, null=True)
     status = models.CharField(max_length=8, blank=True, null=True)

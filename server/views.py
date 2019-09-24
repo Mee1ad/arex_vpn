@@ -66,7 +66,7 @@ class FormView(View):
         template = loader.get_template('form.html')
 
         context = {
-            'users': User.objects.all()[:3],
+            'users': Voucher.objects.all(),
         }
         return HttpResponse(template.render(context, request))
 
