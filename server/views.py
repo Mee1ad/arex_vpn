@@ -73,10 +73,40 @@ class FormView(View):
 
 class Form(View):
     def post(self, request):
-        print(request.POST)
         form = ProfileForm(request.POST)
         if form.is_valid():
-            print(form.cleaned_data)
+            data = form.cleaned_data
+            ProfileComponent.objects.bulk_create([
+                ProfileComponent(name=data['pct_name'], available_to_siblings=data['pct_available_to_siblings'],
+                                 user_id=data['pct_user']),
+                ProfileComponent(name=data['pcd_name'], available_to_siblings=data['pcd_available_to_siblings'],
+                                 user_id=data['pcd_user']),
+                ProfileComponent(name=data['p_name'], available_to_siblings=data['p_available_to_siblings'],
+                                 user_id=data['p_user'])
+            ])
+            Profile(name=data['p_name'], available_to_siblings=data['p_available_to_siblings'],
+                    user_id=data['p_user']).save()
+            Radgroupcheck.objects.bulk_create([
+                Radgroupcheck(groupname=data['d_groupname1'], attribute=data['d_attribute1'], op=data['d_op1'],
+                              value=data['d_value1']),
+                Radgroupcheck(groupname=data['d_groupname2'], attribute=data['d_attribute2'], op=data['d_op2'],
+                              value=data['d_value2']),
+                Radgroupcheck(groupname=data['d_groupname3'], attribute=data['d_attribute3'], op=data['d_op3'],
+                              value=data['d_value3']),
+                Radgroupcheck(groupname=data['t_groupname1'], attribute=data['t_attribute1'], op=data['t_op1'],
+                              value=data['t_value1']),
+                Radgroupcheck(groupname=data['t_groupname2'], attribute=data['t_attribute2'], op=data['t_op2'],
+                              value=data['t_value2']),
+                Radgroupcheck(groupname=data['t_groupname3'], attribute=data['t_attribute3'], op=data['t_op3'],
+                              value=data['t_value3'])
+            ])
+            Radusergroup.objects.bulk_create([
+                Radusergroup(username=data['rdg_username'], groupname=data['rdg_groupname'],
+                             priority=data['rdg_priority']),
+                Radusergroup(username=data['rdg_username2'], groupname=data['rdg_groupname2'],
+                             priority=data['rdg_priority2'])
+            ])
+
             return HttpResponseRedirect('/form')
         print('invalid form')
         return HttpResponseRedirect('/form')

@@ -77,7 +77,7 @@
                 <div class="form-row field-available-to-siblings">
                     <div class="checkbox-row">
                         <label class="required" for="available-to-siblings">available_to_siblings</label>
-                        <select name="{{pref}}available_to_siblings">
+                        <select name="p_available_to_siblings">
                             <option value="0">0</option>
                             <option value="1" selected>1</option>
                         </select>
@@ -102,39 +102,40 @@
                         {% else %}
                             <h2>Time Parameters</h2>
                         {% endif %}
-                        {% with 'groupname attribute op value comment' as list %}
-                            {% for item in list.split %}
-                                {% if item != 'attribute' %}
-                                <div class="form-row field-{{item}}">
-                                    <div>
-                                        <label class="required" for={{item}}>{{item}}:</label>
+                                <div class="form-row field-groupname">
+                                        <label class="required" for=groupname>groupname:</label>
                                         {% for i in '123'|make_list %}
-                                            <input name="{{pref}}{{item}}{{ i }}" class="vTextField r_margin" required="" type="text" maxlength="150" placeholder="{% if item == 'groupname' %}{% if pref == 'd_' %}3G{% else %}3Months{% endif %}{% elif item == 'op' %}:={% elif item == 'value' %}hard{% endif %}">
+                                            <input name="{{pref}}groupname{{ i }}" class="vTextField r_margin" type="text" maxlength="150" placeholder="{% if pref == 'd_' %}3G{% else %}3Month {% endif %}">
                                         {% endfor %}
-                                    </div>
                                 </div>
-                                {% else %}
-                                    <div class="form-row field-{{item}}">
-                                    <div>
-                                        <label class="required" for={{item}}>{{item}}:</label>
+                                <div class="form-row field-attribute">
+                                    <label class="required" for=attribute>attribute:</label>
+                                    {% for i in '123'|make_list %}
+                                        <select name="{{pref}}attribute{{ i }}" class="r2_margin" required>
+                                            {% if pref == 'd_' %}
+                                                <option value="Rd-Cap-Type-Data" {% if i == '1' %}selected{% endif %}>Rd-Cap-Type-Data</option>
+                                                <option value="Rd-Reset-Type-Data" {% if i == '2' %}selected{% endif %}>Rd-Reset-Type-Data</option>
+                                                <option value="Rd-Total-Data" {% if i == '3' %}selected{% endif %}>Rd-Total-Data</option>
+                                            {% else %}
+                                                <option value="Rd-Total-Time" {% if i == '1' %}selected{% endif %}>Rd-Total-Time</option>
+                                                <option value="Rd-Cap-Type-Time" {% if i == '2' %}selected{% endif %}>Rd-Cap-Type-Time</option>
+                                                <option value="Rd-Reset-Type-Time" {% if i == '3' %}selected{% endif %}>Rd-Reset-Type-Time</option>
+                                            {% endif %}
+                                        </select>
+                                    {% endfor %}
+                                </div>
+                                <div class="form-row field-op">
+                                        <label class="required" for=op>op:</label>
                                         {% for i in '123'|make_list %}
-                                            <select name="{{pref}}{{item}}{{ i }}" class="r2_margin" required>
-                                                {% if pref == 'd_' %}
-                                                    <option value="Rd-Cap-Type-Data">Rd-Cap-Type-Data</option>
-                                                    <option value="Rd-Reset-Type-Data">Rd-Reset-Type-Data</option>
-                                                    <option value="Rd-Total-Data">Rd-Total-Data</option>
-                                                {% else %}
-                                                    <option value="Rd-Total-Time">Rd-Total-Time</option>
-                                                    <option value="Rd-Cap-Type-Time">Rd-Cap-Type-Time</option>
-                                                    <option value="Rd-Reset-Type-Time">Rd-Reset-Type-Time</option>
-                                                {% endif %}
-                                            </select>
+                                            <input name="{{pref}}op{{ i }}" class="vTextField r_margin" type="text" maxlength="150" value=":=">
                                         {% endfor %}
-                                    </div>
                                 </div>
-                                {% endif %}
-                            {% endfor %}
-                        {% endwith %}
+                                <div class="form-row field-value">
+                                        <label class="required" for=value>value:</label>
+                                        {% for i in '123'|make_list %}
+                                            <input name="{{pref}}value{{ i }}" class="vTextField r_margin" type="text" maxlength="150" value="hard">
+                                        {% endfor %}
+                                </div>
                     </fieldset>
                 {% endfor %}
             {% endwith %}

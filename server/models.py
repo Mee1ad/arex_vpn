@@ -36,34 +36,6 @@ class Language(models.Model):
         db_table = 'languages'
 
 
-class User(models.Model):
-    def __str__(self):
-        return self.username
-
-    username = models.CharField(max_length=255)
-    password = models.CharField(max_length=50)
-    token = models.CharField(max_length=36, blank=True, null=True)
-    name = models.CharField(max_length=50)
-    surname = models.CharField(max_length=50)
-    address = models.CharField(max_length=255)
-    phone = models.CharField(max_length=50)
-    email = models.CharField(max_length=100)
-    active = models.IntegerField()
-    monitor = models.IntegerField()
-    country = models.ForeignKey(Countrie, on_delete=models.PROTECT, blank=True, null=True)
-    group = models.ForeignKey(Group, on_delete=models.PROTECT)
-    language = models.ForeignKey(Language, on_delete=models.PROTECT, blank=True, null=True)
-    parent = models.ForeignKey('self', on_delete=models.PROTECT, blank=True, null=True)
-    lft = models.IntegerField(blank=True, null=True)
-    rght = models.IntegerField(blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'users'
-
-
 class Realm(models.Model):
     def __str__(self):
         return self.name
@@ -83,7 +55,8 @@ class Realm(models.Model):
     country = models.CharField(max_length=50, blank=True, null=True)
     lat = models.FloatField(blank=True, null=True)
     lon = models.FloatField(blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+    user = models.ForeignKey("Voucher", on_delete=models.PROTECT, blank=True, null=True,
+                             related_name='realm_user')
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     twitter = models.CharField(max_length=255, blank=True, null=True)
@@ -103,36 +76,6 @@ class Realm(models.Model):
         db_table = 'realms'
 
 
-class Profile(models.Model):
-    def __str__(self):
-        return self.name
-
-    name = models.CharField(max_length=128)
-    available_to_siblings = models.IntegerField()
-    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'profiles'
-
-
-class ProfileComponent(models.Model):
-    def __str__(self):
-        return self.name
-    name = models.CharField(max_length=128)
-    available_to_siblings = models.BooleanField()
-    user = models.ForeignKey(User, on_delete=models.PROTECT,
-                             blank=True, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        managed = False
-        db_table = 'profile_components'
-
-
 class Voucher(models.Model):
     def __str__(self):
         return self.name
@@ -146,7 +89,7 @@ class Voucher(models.Model):
     last_accept_nas = models.CharField(max_length=128, blank=True, null=True)
     last_reject_nas = models.CharField(max_length=128, blank=True, null=True)
     last_reject_message = models.CharField(max_length=255, blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.PROTECT, blank=True, null=True)
+    user = models.ForeignKey("Voucher", on_delete=models.PROTECT, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     extra_name = models.CharField(max_length=100, blank=True, null=True)
@@ -155,7 +98,7 @@ class Voucher(models.Model):
     realm = models.CharField(max_length=50)
     realm = models.ForeignKey(Realm, on_delete=models.PROTECT, blank=True, null=True)
     profile = models.CharField(max_length=50)
-    profile = models.ForeignKey(Profile, on_delete=models.PROTECT, blank=True, null=True)
+    profile = models.ForeignKey("Profile", on_delete=models.PROTECT, blank=True, null=True)
     expire = models.CharField(max_length=10, blank=True, null=True)
     time_valid = models.CharField(max_length=10)
     data_used = models.BigIntegerField(blank=True, null=True)
@@ -166,6 +109,37 @@ class Voucher(models.Model):
     class Meta:
         managed = False
         db_table = 'vouchers'
+
+
+class Profile(models.Model):
+    def __str__(self):
+        return self.name
+
+    name = models.CharField(max_length=128)
+    available_to_siblings = models.BooleanField()
+    user = models.ForeignKey('Voucher', on_delete=models.PROTECT, blank=True, null=True,
+                             related_name='profile_voucher')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = 'profiles'
+
+
+class ProfileComponent(models.Model):
+    def __str__(self):
+        return self.name
+    name = models.CharField(max_length=128)
+    available_to_siblings = models.BooleanField()
+    user = models.ForeignKey("Voucher", on_delete=models.PROTECT,
+                             blank=True, null=True, related_name='profile_component_user')
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = 'profile_components'
 
 
 class UserGenerator(models.Model):
@@ -194,6 +168,30 @@ class Radcheck(models.Model):
         db_table = 'radcheck'
 
 
+class Radgroupcheck(models.Model):
+    groupname = models.CharField(max_length=64, blank=True)
+    attribute = models.CharField(max_length=64, blank=True)
+    op = models.CharField(max_length=2, blank=True, default=':=')
+    value = models.CharField(max_length=253, blank=True, default='hard')
+    comment = models.CharField(max_length=253, blank=True, null=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        managed = False
+        db_table = 'radgroupcheck'
+
+
+class Radusergroup(models.Model):
+    username = models.CharField(max_length=64, blank=True)
+    groupname = models.CharField(max_length=64, blank=True)
+    priority = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'radusergroup'
+
+
 class ApiUser(models.Model):
     pin = models.CharField(max_length=31)
     device_id = models.CharField(max_length=127, unique=True)
@@ -211,10 +209,3 @@ class ApiHit(models.Model):
 
     class Meta:
         db_table = 'api_hit_address'
-
-
-class ProfileComponentForm(ModelForm):
-
-    class Meta:
-        model = ProfileComponent
-        fields = ['name', 'available_to_siblings', 'user']
