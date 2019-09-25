@@ -10,9 +10,17 @@ from time import time
 from django.http import HttpResponseRedirect
 from .form import ProfileForm
 from django.template import loader
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 
 class Login(View):
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(Login, self).dispatch(*args, **kwargs)
+
+
     def post(self, request):
         data = json.loads(request.body)
         code = int(data['code'])
@@ -51,6 +59,10 @@ class Login(View):
 
 
 class Signup(View):
+    @method_decorator(csrf_exempt)
+    def dispatch(self, *args, **kwargs):
+        return super(Signup, self).dispatch(*args, **kwargs)
+
     def post(self, request):
         data = json.loads(request.body)
         try:
